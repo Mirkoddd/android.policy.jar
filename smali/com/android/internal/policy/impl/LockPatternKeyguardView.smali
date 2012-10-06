@@ -5339,9 +5339,21 @@
 
     .line 1358
     .local v0, lockView:Landroid/view/View;
-    iget-boolean v1, p0, Lcom/android/internal/policy/impl/LockPatternKeyguardView;->mIsTabletDevice:Z
+    iget-object v1, p0, Lcom/android/internal/policy/impl/LockPatternKeyguardView;->mContext:Landroid/content/Context;
 
-    if-eqz v1, :cond_18
+    invoke-virtual {v1}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
+
+    move-result-object v1
+
+    const-string v2, "aosp_lock"
+
+    const/4 v3, 0x0
+
+    invoke-static {v1, v2, v3}, Landroid/provider/Settings$System;->getInt(Landroid/content/ContentResolver;Ljava/lang/String;I)I
+
+    move-result v1
+
+    if-eqz v1, :cond_23
 
     .line 1359
     new-instance v0, Lcom/android/internal/policy/impl/LockScreen;
@@ -5368,7 +5380,7 @@
     return-object v0
 
     .line 1366
-    :cond_18
+    :cond_23
     new-instance v0, Lcom/android/internal/policy/impl/CircleLockScreen;
 
     .end local v0           #lockView:Landroid/view/View;
