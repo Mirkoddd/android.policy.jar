@@ -191,6 +191,10 @@
 
 .field final mAllowSystemUiDelay:Ljava/lang/Runnable;
 
+.field mBackKillTimeout:Z
+
+.field mBackLongPress:Ljava/lang/Runnable;
+
 .field mBootMsgDialog:Landroid/app/ProgressDialog;
 
 .field mBroadcastDone:Landroid/content/BroadcastReceiver;
@@ -334,6 +338,8 @@
 .field mLockScreenTimeout:I
 
 .field mLockScreenTimerActive:Z
+
+.field mLongPressBackKill:Z
 
 .field private mLongPressOnHomeBehavior:I
 
@@ -867,6 +873,13 @@
     invoke-direct {v0, p0}, Lcom/android/internal/policy/impl/PhoneWindowManager$12;-><init>(Lcom/android/internal/policy/impl/PhoneWindowManager;)V
 
     iput-object v0, p0, Lcom/android/internal/policy/impl/PhoneWindowManager;->mHideNavInputHandler:Landroid/view/InputHandler;
+
+    .line 2768
+    new-instance v0, Lcom/android/internal/policy/impl/PhoneWindowManager$KillConcept;
+
+    invoke-direct {v0, p0}, Lcom/android/internal/policy/impl/PhoneWindowManager$KillConcept;-><init>(Lcom/android/internal/policy/impl/PhoneWindowManager;)V
+
+    iput-object v0, p0, Lcom/android/internal/policy/impl/PhoneWindowManager;->mBackLongPress:Ljava/lang/Runnable;
 
     .line 3677
     new-instance v0, Ljava/lang/Object;
@@ -8160,6 +8173,56 @@
 
     .line 2187
     :cond_13c
+    const/16 v28, 0x4
+
+    move/from16 v0, v28
+
+    move/from16 v1, v21
+
+    if-ne v1, v0, :cond_mi
+
+    if-nez v8, :cond_mi
+
+    .line 1741
+    and-int/lit8 v28, v11, 0x20
+
+    if-nez v28, :cond_mi
+
+    .line 1742
+    move-object/from16 v0, p0
+
+    iget-object v0, v0, Lcom/android/internal/policy/impl/PhoneWindowManager;->mHandler:Landroid/os/Handler;
+
+    move-object/from16 v28, v0
+
+    move-object/from16 v0, p0
+
+    iget-object v0, v0, Lcom/android/internal/policy/impl/PhoneWindowManager;->mBackLongPress:Ljava/lang/Runnable;
+
+    move-object/from16 v1, v28
+
+    invoke-virtual {v1, v0}, Landroid/os/Handler;->removeCallbacks(Ljava/lang/Runnable;)V
+
+    .line 1743
+    add-int/lit8 v28, v11, 0x20
+
+    move-object/from16 v0, p2
+
+    move/from16 v1, v28
+
+    invoke-static {v0, v1}, Landroid/view/KeyEvent;->changeFlags(Landroid/view/KeyEvent;I)Landroid/view/KeyEvent;
+
+    .line 1744
+    const/16 v28, 0x0
+
+    move/from16 v0, v28
+
+    move-object/from16 v1, p0
+
+    iput-boolean v0, v1, Lcom/android/internal/policy/impl/PhoneWindowManager;->mBackKillTimeout:Z
+
+    .line 1752
+    :cond_mi
     const/16 v39, 0x3
 
     move/from16 v0, v21
@@ -9206,6 +9269,57 @@
     .line 2495
     .end local v9           #e:Landroid/os/RemoteException;
     :cond_45c
+    const/16 v28, 0x4
+
+    move/from16 v0, v28
+
+    move/from16 v1, v21
+
+    if-ne v1, v0, :cond_mirko
+
+    .line 1863
+    move-object/from16 v0, p0
+
+    iget-boolean v0, v0, Lcom/android/internal/policy/impl/PhoneWindowManager;->mBackKillTimeout:Z
+
+    move/from16 v28, v0
+
+    if-nez v28, :cond_mirko
+
+    if-eqz v8, :cond_mirko
+
+    if-nez v29, :cond_mirko
+
+    .line 1864
+    move-object/from16 v0, p0
+
+    iget-object v0, v0, Lcom/android/internal/policy/impl/PhoneWindowManager;->mHandler:Landroid/os/Handler;
+
+    move-object/from16 v38, v0
+
+    move-object/from16 v0, p0
+
+    iget-object v0, v0, Lcom/android/internal/policy/impl/PhoneWindowManager;->mBackLongPress:Ljava/lang/Runnable;
+
+    move-object/from16 v39, v0
+
+    invoke-static {}, Landroid/view/ViewConfiguration;->getGlobalActionKeyTimeout()J
+
+    move-result-wide v40
+
+    invoke-virtual/range {v38 .. v41}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
+
+    .line 1865
+    const/16 v28, 0x1
+
+    move/from16 v0, v28
+
+    move-object/from16 v1, p0
+
+    iput-boolean v0, v1, Lcom/android/internal/policy/impl/PhoneWindowManager;->mBackKillTimeout:Z
+
+    .line 1875
+    :cond_mirko
     const/16 v39, 0xd4
 
     move/from16 v0, v21
